@@ -12,7 +12,7 @@ import java.util.List;
 public class Client extends Person {
     private static final long serialVersionUID = 1L;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "client")
     private List<Ticket> tickets = new ArrayList<>();
 
