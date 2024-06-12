@@ -1,5 +1,6 @@
 package com.nicolas.helpdesk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nicolas.helpdesk.domain.enums.Profile;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -11,6 +12,7 @@ import java.util.List;
 public class Client extends Person {
     private static final long serialVersionUID = 1L;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "client")
     private List<Ticket> tickets = new ArrayList<>();
 
