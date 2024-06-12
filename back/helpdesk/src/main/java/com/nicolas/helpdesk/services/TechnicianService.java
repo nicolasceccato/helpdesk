@@ -2,7 +2,7 @@ package com.nicolas.helpdesk.services;
 
 import com.nicolas.helpdesk.domain.Technician;
 import com.nicolas.helpdesk.repositories.TechnicianRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,8 +16,8 @@ public class TechnicianService {
         this.technicianRepository = technicianRepository;
     }
 
-    public Technician findById(Integer id){
+    public Technician findById(Integer id) {
         Optional<Technician> obj = technicianRepository.findById(id);
-        return obj.orElse(null);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Object was not found! Id: " + id));
     }
 }
