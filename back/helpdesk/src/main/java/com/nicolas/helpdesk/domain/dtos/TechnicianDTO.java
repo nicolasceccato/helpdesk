@@ -17,10 +17,12 @@ public class TechnicianDTO implements Serializable {
     protected String cpf;
     protected String email;
     protected String password;
-    protected Set<Integer> profiles = new HashSet<>();
+    private Set<Integer> profiles = new HashSet<>();
     protected LocalDate criationDate = LocalDate.now();
 
     public TechnicianDTO() {
+        addProfile(Profile.TECHNICIAN);
+        addProfile(Profile.CLIENT);
     }
 
     public TechnicianDTO(Technician technician) {
@@ -31,6 +33,8 @@ public class TechnicianDTO implements Serializable {
         this.password = technician.getPassword();
         this.profiles = technician.getProfiles().stream().map(x -> x.getCode()).collect(Collectors.toSet());
         this.criationDate = technician.getCriationDate();
+        addProfile(Profile.TECHNICIAN);
+        addProfile(Profile.CLIENT);
     }
 
     public Integer getId() {
@@ -77,7 +81,7 @@ public class TechnicianDTO implements Serializable {
         return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
     }
 
-    public void addProfiles(Profile profile) {
+    public void addProfile(Profile profile) {
         profiles.add(profile.getCode());
     }
 

@@ -1,6 +1,7 @@
 package com.nicolas.helpdesk.services;
 
 import com.nicolas.helpdesk.domain.Technician;
+import com.nicolas.helpdesk.domain.dtos.TechnicianDTO;
 import com.nicolas.helpdesk.repositories.TechnicianRepository;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,12 @@ public class TechnicianService {
 
     public List<Technician> findAll() {
         return technicianRepository.findAll();
+    }
+
+    public Technician create(TechnicianDTO technicianDTO) {
+        technicianDTO.setId(null);
+        Technician newTechnician = new Technician(technicianDTO);
+        return technicianRepository.save(newTechnician);
+
     }
 }
