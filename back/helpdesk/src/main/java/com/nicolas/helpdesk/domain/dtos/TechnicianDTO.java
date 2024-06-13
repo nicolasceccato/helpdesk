@@ -2,6 +2,7 @@ package com.nicolas.helpdesk.domain.dtos;
 
 import com.nicolas.helpdesk.domain.Technician;
 import com.nicolas.helpdesk.domain.enums.Profile;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,9 +14,17 @@ public class TechnicianDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     protected Integer id;
+
+    @NotBlank(message = "The field Name is required")
     protected String name;
+
+    @NotBlank(message = "The field Cpf is required")
     protected String cpf;
+
+    @NotBlank(message = "The field Email is required")
     protected String email;
+
+    @NotBlank(message = "The field Password is required")
     protected String password;
     private Set<Integer> profiles = new HashSet<>();
     protected LocalDate criationDate = LocalDate.now();

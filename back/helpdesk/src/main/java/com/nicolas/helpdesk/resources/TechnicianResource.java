@@ -3,6 +3,7 @@ package com.nicolas.helpdesk.resources;
 import com.nicolas.helpdesk.domain.Technician;
 import com.nicolas.helpdesk.domain.dtos.TechnicianDTO;
 import com.nicolas.helpdesk.services.TechnicianService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,7 +36,7 @@ public class TechnicianResource {
     }
 
     @PostMapping
-    public ResponseEntity<TechnicianDTO> create(@RequestBody TechnicianDTO technicianDTO) {
+    public ResponseEntity<TechnicianDTO> create(@Valid @RequestBody TechnicianDTO technicianDTO) {
         Technician newTechnician = service.create(technicianDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{/id}").buildAndExpand(newTechnician.getId()).toUri();
         return ResponseEntity.created(uri).build();
