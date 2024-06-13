@@ -1,8 +1,11 @@
 package com.nicolas.helpdesk.services;
 
+import com.nicolas.helpdesk.domain.Person;
 import com.nicolas.helpdesk.domain.Technician;
 import com.nicolas.helpdesk.domain.dtos.TechnicianDTO;
+import com.nicolas.helpdesk.repositories.PersonRepository;
 import com.nicolas.helpdesk.repositories.TechnicianRepository;
+import com.nicolas.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +17,11 @@ public class TechnicianService {
 
     private final TechnicianRepository technicianRepository;
 
-    public TechnicianService(TechnicianRepository technicianRepository) {
+    private final PersonRepository personRepository;
+
+    public TechnicianService(TechnicianRepository technicianRepository, PersonRepository personRepository) {
         this.technicianRepository = technicianRepository;
+        this.personRepository = personRepository;
     }
 
     public Technician findById(Integer id) {
@@ -29,8 +35,20 @@ public class TechnicianService {
 
     public Technician create(TechnicianDTO technicianDTO) {
         technicianDTO.setId(null);
+        validateByCpfAndEmail(technicianDTO);
         Technician newTechnician = new Technician(technicianDTO);
         return technicianRepository.save(newTechnician);
+    }
 
+    private void validateByCpfAndEmail(TechnicianDTO technicianDTO) {
+        Optional<Person> obj = personRepository.findByCpf(technicianDTO.getCpf());
+        if (obj.isPresent() && obj.get().getId() != technicianDTO.getId()) {
+            throw new DataIntegrityViolationException("CPF already exists in the system");
+        }
+
+        obj = personRepository.findByEmail(technicianDTO.getEmail());
+        if (obj.isPresent() && obj.get().getId() != technicianDTO.getId()) {
+            throw new DataIntegrityViolationException("Email already exists in the system");
+        }
     }
 }
