@@ -5,6 +5,7 @@ import com.nicolas.helpdesk.repositories.TechnicianRepository;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,5 +20,9 @@ public class TechnicianService {
     public Technician findById(Integer id) {
         Optional<Technician> obj = technicianRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Object was not found! Id: " + id));
+    }
+
+    public List<Technician> findAll() {
+        return technicianRepository.findAll();
     }
 }
