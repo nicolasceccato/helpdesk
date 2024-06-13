@@ -40,6 +40,14 @@ public class TechnicianService {
         return technicianRepository.save(newTechnician);
     }
 
+    public Technician update(Integer id, TechnicianDTO technicianDTO) {
+        technicianDTO.setId(id);
+        Technician oldObj = findById(id);
+        validateByCpfAndEmail(technicianDTO);
+        oldObj = new Technician(technicianDTO);
+        return technicianRepository.save(oldObj);
+    }
+
     private void validateByCpfAndEmail(TechnicianDTO technicianDTO) {
         Optional<Person> obj = personRepository.findByCpf(technicianDTO.getCpf());
         if (obj.isPresent() && obj.get().getId() != technicianDTO.getId()) {
@@ -51,4 +59,6 @@ public class TechnicianService {
             throw new DataIntegrityViolationException("Email already exists in the system");
         }
     }
+
+
 }

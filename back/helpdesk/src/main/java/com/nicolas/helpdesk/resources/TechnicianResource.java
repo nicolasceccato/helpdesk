@@ -41,4 +41,10 @@ public class TechnicianResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{/id}").buildAndExpand(newTechnician.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TechnicianDTO> upadte(@PathVariable Integer id, @Valid @RequestBody TechnicianDTO technicianDTO) {
+        Technician obj = service.update(id, technicianDTO);
+        return ResponseEntity.ok().body(new TechnicianDTO(obj));
+    }
 }
