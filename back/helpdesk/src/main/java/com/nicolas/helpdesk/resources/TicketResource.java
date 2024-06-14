@@ -3,12 +3,12 @@ package com.nicolas.helpdesk.resources;
 import com.nicolas.helpdesk.domain.Ticket;
 import com.nicolas.helpdesk.domain.dtos.TicketDTO;
 import com.nicolas.helpdesk.services.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,4 +34,12 @@ public class TicketResource {
         List<TicketDTO> listOfTicketsDTO = listOfTickets.stream().map(obj -> new TicketDTO(obj)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listOfTicketsDTO);
     }
+
+    @PostMapping
+    public ResponseEntity<TicketDTO> create(@Valid @RequestBody TicketDTO ticketDTO) {
+        Ticket ticket = ticketService.create(ticketDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(ticket.getId()).toUri();
+        return ResponseEntity.created(uri).build();
+    }
+
 }
