@@ -3,6 +3,7 @@ package com.nicolas.helpdesk.resources.exceptions;
 import com.nicolas.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,12 +29,19 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> validationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ValidationError> validationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ValidationError validationError = new ValidationError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Validation Error", "Error On Validate Fields", request.getRequestURI());
 
         for (FieldError x : ex.getBindingResult().getFieldErrors()) {
             validationError.addError(x.getField(), x.getDefaultMessage());
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationError);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<StandardError> validationCPFErrors(ConstraintViolationException ex, HttpServletRequest request) {
+        StandardError validationError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Validation Error", "Error On Validate CPF", request.getRequestURI());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationError);
     }
 }
