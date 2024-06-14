@@ -10,6 +10,7 @@ import com.nicolas.helpdesk.repositories.TicketRepository;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,13 @@ public class TicketService {
         return ticketRepository.save(newTicket(ticketDTO));
     }
 
+    public Ticket update(Integer id, TicketDTO ticketDTO) {
+        ticketDTO.setId(id);
+        Ticket oldObj = findById(id);
+        oldObj = newTicket(ticketDTO);
+        return ticketRepository.save(oldObj);
+    }
+
     private Ticket newTicket(TicketDTO obj) {
         Technician technician = technicianService.findById(obj.getTechnician());
         Client client = clientService.findById(obj.getClient());
@@ -46,6 +54,9 @@ public class TicketService {
         Ticket ticket = new Ticket();
         if (obj.getId() != null) {
             ticket.setId(obj.getId());
+        }
+        if (obj.getStatus().equals(2)) {
+            ticket.setCloseDate(LocalDate.now());
         }
         ticket.setTechnician(technician);
         ticket.setClient(client);
@@ -55,5 +66,6 @@ public class TicketService {
         ticket.setObservations(obj.getObservations());
         return ticket;
     }
+
 
 }
