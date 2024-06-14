@@ -2,6 +2,8 @@ package com.nicolas.helpdesk.domain.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nicolas.helpdesk.domain.Ticket;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,11 +15,17 @@ public class TicketDTO implements Serializable {
     private LocalDate openDate = LocalDate.now();
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate closeDate;
+    @NotNull(message = "The field Priority is required")
     private Integer priority;
+    @NotNull(message = "The field Status is required")
     private Integer status;
+    @NotBlank(message = "The field Title is required")
     private String title;
+    @NotBlank(message = "The field Observations is required")
     private String observations;
+    @NotNull(message = "The field Technician is required")
     private Integer technician;
+    @NotNull(message = "The field Client is required")
     private Integer client;
     private String technicianName;
     private String clientName;
