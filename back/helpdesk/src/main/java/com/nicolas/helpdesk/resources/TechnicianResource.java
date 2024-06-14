@@ -47,4 +47,10 @@ public class TechnicianResource {
         Technician obj = service.update(id, technicianDTO);
         return ResponseEntity.ok().body(new TechnicianDTO(obj));
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<TechnicianDTO> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -48,6 +48,14 @@ public class TechnicianService {
         return technicianRepository.save(oldObj);
     }
 
+    public void delete(Integer id) {
+        Technician obj = findById(id);
+        if (obj.getTickets().size() > 0) {
+            throw new DataIntegrityViolationException("This technician has some tickets in his name!");
+        }
+        technicianRepository.deleteById(id);
+    }
+
     private void validateByCpfAndEmail(TechnicianDTO technicianDTO) {
         Optional<Person> obj = personRepository.findByCpf(technicianDTO.getCpf());
         if (obj.isPresent() && obj.get().getId() != technicianDTO.getId()) {
