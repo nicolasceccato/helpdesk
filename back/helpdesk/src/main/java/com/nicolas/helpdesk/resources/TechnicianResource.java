@@ -5,6 +5,7 @@ import com.nicolas.helpdesk.domain.dtos.TechnicianDTO;
 import com.nicolas.helpdesk.services.TechnicianService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -35,6 +36,7 @@ public class TechnicianResource {
         return ResponseEntity.ok().body(listDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TechnicianDTO> create(@Valid @RequestBody TechnicianDTO technicianDTO) {
         Technician newTechnician = service.create(technicianDTO);
@@ -42,12 +44,14 @@ public class TechnicianResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<TechnicianDTO> upadte(@PathVariable Integer id, @Valid @RequestBody TechnicianDTO technicianDTO) {
         Technician obj = service.update(id, technicianDTO);
         return ResponseEntity.ok().body(new TechnicianDTO(obj));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<TechnicianDTO> delete(@PathVariable Integer id) {
         service.delete(id);
