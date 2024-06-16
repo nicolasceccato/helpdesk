@@ -7,6 +7,7 @@ import com.nicolas.helpdesk.repositories.PersonRepository;
 import com.nicolas.helpdesk.repositories.TechnicianRepository;
 import com.nicolas.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +17,13 @@ import java.util.Optional;
 public class TechnicianService {
 
     private final TechnicianRepository technicianRepository;
-
     private final PersonRepository personRepository;
+    private final BCryptPasswordEncoder encoder;
 
-    public TechnicianService(TechnicianRepository technicianRepository, PersonRepository personRepository) {
+    public TechnicianService(TechnicianRepository technicianRepository, PersonRepository personRepository, BCryptPasswordEncoder encoder) {
         this.technicianRepository = technicianRepository;
         this.personRepository = personRepository;
+        this.encoder = encoder;
     }
 
     public Technician findById(Integer id) {
@@ -35,6 +37,7 @@ public class TechnicianService {
 
     public Technician create(TechnicianDTO technicianDTO) {
         technicianDTO.setId(null);
+        technicianDTO.setPassword(encoder.encode(technicianDTO.getPassword()));
         validateByCpfAndEmail(technicianDTO);
         Technician newTechnician = new Technician(technicianDTO);
         return technicianRepository.save(newTechnician);

@@ -7,6 +7,7 @@ import com.nicolas.helpdesk.repositories.ClientRepository;
 import com.nicolas.helpdesk.repositories.PersonRepository;
 import com.nicolas.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.nicolas.helpdesk.services.exceptions.ObjectNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +17,13 @@ import java.util.Optional;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-
     private final PersonRepository personRepository;
+    private final BCryptPasswordEncoder encoder;
 
-    public ClientService(ClientRepository clientRepository, PersonRepository personRepository) {
+    public ClientService(ClientRepository clientRepository, PersonRepository personRepository, BCryptPasswordEncoder encoder) {
         this.clientRepository = clientRepository;
         this.personRepository = personRepository;
+        this.encoder = encoder;
     }
 
     public Client findById(Integer id) {
@@ -35,6 +37,7 @@ public class ClientService {
 
     public Client create(ClientDTO clientDTO) {
         clientDTO.setId(null);
+        clientDTO.setPassword(encoder.encode(clientDTO.getPassword()));
         validateByCpfAndEmail(clientDTO);
         Client newClient = new Client(clientDTO);
         return clientRepository.save(newClient);
