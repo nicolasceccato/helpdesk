@@ -14,7 +14,7 @@
                 matInput placeholder="Ex. 123">
         </mat-form-field>
 
-        <button [disabled]="!validateFields()" class="full-width mat-elevation-z8" mat-stroked-button
+        <button (click)="login()" [disabled]="!validateFields()" class="full-width mat-elevation-z8" mat-stroked-button
             color="primary">Acessar</button>
     </form>
 
